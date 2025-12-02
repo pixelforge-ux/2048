@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&display=swap" rel="stylesheet">
-<script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
   <meta charset="UTF-8" />
   <title>2048</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <!-- Eitaa SDK -->
+  <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
   <style>
     *, 
     *::before, 
@@ -304,7 +304,6 @@
     }
   </style>
 </head>
-<style>body{font-family:'Vazirmatn',sans-serif;}</style>
 <body>
   <div id="app">
     <div class="game-shell">
@@ -820,7 +819,7 @@
 
         let dir;
         if (absDx > absDy) {
-          dir = dx > 0 ? "left" : "right";
+          dir = dx > 0 ? "right" : "left";
         } else {
           dir = dy > 0 ? "down" : "up";
         }
@@ -849,6 +848,24 @@
     });
 
     /* Start */
+
+    // Eitaa WebApp integration: enable closing confirmation & viewport handling
+    window.addEventListener('load', () => {
+      try {
+        if (window.Eitaa && window.Eitaa.WebApp) {
+          Eitaa.WebApp.enableClosingConfirmation();
+          Eitaa.WebApp.onEvent('viewportChanged', (data) => {
+            const app = document.getElementById('app');
+            if (app && data && typeof data.height === 'number') {
+              app.style.height = data.height + 'px';
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('Eitaa SDK check failed', err);
+      }
+    });
+
     readBestScoreOnce();
     initGame();
   </script>
