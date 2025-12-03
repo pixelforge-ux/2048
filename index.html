@@ -6,6 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <!-- Eitaa SDK -->
   <script src="https://developer.eitaa.com/eitaa-web-app.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  try {
+    if (window.Eitaa && Eitaa.WebApp) {
+      Eitaa.WebApp.ready();
+      if (Eitaa.WebApp.expand) Eitaa.WebApp.expand();
+
+      Eitaa.WebApp.onEvent('backButtonClicked', () => {
+        if (history.length > 1) history.back();
+        else Eitaa.WebApp.close();
+      });
+    }
+  } catch(e) { console.warn(e); }
+});
+</script>
+
   <style>
     *, 
     *::before, 
