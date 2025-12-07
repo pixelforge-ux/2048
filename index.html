@@ -835,29 +835,29 @@ document.addEventListener("DOMContentLoaded", () => {
       "touchend",
       (e) => {
         if (!touchMoved) return;
+
         const touch = e.changedTouches[0];
         const dx = touch.clientX - touchStartX;
         const dy = touch.clientY - touchStartY;
 
         const absDx = Math.abs(dx);
         const absDy = Math.abs(dy);
-        const threshold = 24;
+        const threshold = 10;
 
         if (Math.max(absDx, absDy) < threshold) return;
 
         let dir;
-        // Correct mapping: positive dx -> right, negative -> left
+
         if (absDx > absDy) {
           dir = dx > 0 ? "left" : "right";
         } else {
           dir = dy > 0 ? "down" : "up";
         }
+
         handleMove(dir);
       },
       { passive: true }
-    );
-
-    /* Buttons */
+    );/* Buttons */
     newGameBtn.addEventListener("click", () => {
       game.reset();
       renderGrid(game.grid, true);
@@ -906,7 +906,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   .gold-footer {
     position: fixed;
-    bottom: 12px;
+    bottom: 46px;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -920,12 +920,32 @@ document.addEventListener("DOMContentLoaded", () => {
     text-align: center;
     font-size: 13px;
     font-weight: 600;
-    animation: goldenMove 8s ease infinite;
+    animation: goldenMove 6s ease infinite;
   }
 </style>
 
 <footer class="gold-footer">
   کاری از سید آروین موسوی
 </footer>
+<script>
+(function(){
+  const promo = document.getElementById('promo-footer');
+  if(!promo) return;
+
+  promo.addEventListener('click', () => {
+    if (window.Eitaa && window.Eitaa.WebApp && typeof Eitaa.WebApp.openEitaaLink === 'function') {
+      Eitaa.WebApp.openEitaaLink('eitaa://resolve?domain=Arvin_webdev');
+      return;
+    }
+    try {
+      navigator.clipboard?.writeText('@Arvin_webdev');
+      alert('آیدی @Arvin_webdev کپی شد — لطفاً داخل ایتا پیست کنید.');
+    } catch(e) {
+      alert('لطفاً از داخل برنامه ایتا وارد شوید.');
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
