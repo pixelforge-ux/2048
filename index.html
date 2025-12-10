@@ -320,8 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
       outline-offset: 2px;
     }
   </style>
-
-<style>
+  <style>
 
 body, * {
   font-family: 'LocalYekan', 'IranYekan', sans-serif !important;
@@ -340,7 +339,6 @@ body, * {
   font-family: 'LocalFont', sans-serif !important;
 }
 </style>
-
 </head>
 <body>
   <div id="app">
@@ -904,6 +902,7 @@ body, * {
       try {
         if (window.Eitaa && window.Eitaa.WebApp) {
           Eitaa.WebApp.enableClosingConfirmation();
+          if (Eitaa.WebApp.disableVerticalSwipes) Eitaa.WebApp.disableVerticalSwipes();
           Eitaa.WebApp.onEvent('viewportChanged', (data) => {
             const app = document.getElementById('app');
             if (app && data && typeof data.height === 'number') {
@@ -969,21 +968,33 @@ body, * {
 </script>
 
 
-<!-- Prevent Pull-to-Refresh -->
+<!-- Prevent Pull-to-Refresh on mobile (touch) -->
 <script>
-let lastTouchY = 0, isPullingDown = false;
-window.addEventListener("touchstart", e => {
-  if (e.touches.length===1){
-    lastTouchY=e.touches[0].clientY;
-    isPullingDown=window.scrollY===0;
-  }
-},{passive:true});
-window.addEventListener("touchmove", e=>{
-  if(isPullingDown && e.touches[0].clientY>lastTouchY){
-    e.preventDefault();
-  }
-  lastTouchY=e.touches[0].clientY;
-},{passive:false});
+(function(){
+  let lastTouchY = 0;
+  let isPullingDown = false;
+
+  window.addEventListener("touchstart", function(e){
+    if (e.touches && e.touches.length === 1) {
+      lastTouchY = e.touches[0].clientY;
+      isPullingDown = window.scrollY === 0;
+    }
+  }, { passive: true });
+
+  window.addEventListener("touchmove", function(e){
+    if (!e.touches || e.touches.length !== 1) return;
+    const currentY = e.touches[0].clientY;
+    if (isPullingDown && currentY > lastTouchY) {
+      // Prevent the native pull-to-refresh behavior
+      e.preventDefault();
+    }
+    lastTouchY = currentY;
+  }, { passive: false });
+
+  // Reset flag on touchend/cancel
+  window.addEventListener("touchend", function(){ isPullingDown = false; }, { passive: true });
+  window.addEventListener("touchcancel", function(){ isPullingDown = false; }, { passive: true });
+})();
 </script>
 
 </body>
