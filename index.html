@@ -804,9 +804,7 @@ body, * {
     }
 
     /* Input handling */
-const isMobile=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
     window.addEventListener("keydown", (e) => {
-      if(isMobile) return;
       let dir = null;
       switch (e.key) {
         case "ArrowUp":
